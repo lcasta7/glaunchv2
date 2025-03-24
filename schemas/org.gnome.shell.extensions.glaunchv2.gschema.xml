@@ -2,5 +2,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.shell.extensions.glaunchv2" path="/org/gnome/shell/extensions/glaunchv2/">
+    <key name="f6" type="as">
+	  <default><![CDATA[['F6']]]></default>
+    </key>
   </schema>
 </schemalist>

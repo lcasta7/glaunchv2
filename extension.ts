@@ -7,26 +7,54 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 export default class GlaunchV2 extends Extension {
-	enable() {
-		global.window_manager.connect('map', (_, win: Meta.WindowActor) => {
-			console.log('GlaunchV2: sucessfully logged: ',
-				win.get_meta_window()?.get_wm_class());
-			const metaWin = win.get_meta_window()
-			console.log("[GlaunchV2] wm_class:%s then_second:%s",
-				metaWin?.get_wm_class(),
-				metaWin?.get_id);
 
-		})
+	enable() {
+
+		//set[string]App
+		let appMap = new Map<string, Meta.Window>();
+		global.window_manager.connect('map', (_, win: Meta.WindowActor) => {
+			//we launch with this if it's available/otherwise wmAppName
+			// const gtkAppName = win.get_meta_window()?.get_gtk_application_id();
+
+			const metaWindow: Meta.Window = win.get_meta_window()!;
+			const wmAppName: string = metaWindow?.get_wm_class()?.toLowerCase() ?? "";
+			if (wmAppName === "" || wmAppName === "gjs") {
+				return;
+			}
+
+
+			if (metaWindow) {
+				appMap.set(wmAppName, metaWindow);
+			}
+		});
+
+		global.window_manager.connect('destroy', (_, win: Meta.WindowActor) => {
+			const metaWindow: Meta.Window = win.get_meta_window()!;
+			const wmAppName: string = metaWindow?.get_wm_class() ?? "";
+			if (appMap.has(wmAppName)) {
+				appMap.delete(wmAppName);
+
+			}
+
+		});
+
+		let settings: Gio.Settings = this.getSettings('org.gnome.shell.extensions.glaunchv2');
+		Main.wm.addKeybinding(
+			'f6',
+			settings,
+			Meta.KeyBindingFlags.NONE,
+			Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
+			() => {
+				console.log('[GlaunchV2] AppMap contents:');
+				appMap.forEach((metaWin, key) => {
+					console.log(`  Key: "${key}", Window ID: ${metaWin.get_id()}`);
+				});
+				console.log(`[GlaunchV2] Total entries: ${appMap.size}`);
+			}
+		);
 	}
+
 
 	disable() {
 	}
 }
-
-
-
-
-// global.window_manager.connect('map', (_, actor) => {
-// 	let metaWindow = actor.meta_window;
-// 	this._storeApp(metaWindow);
-// });
