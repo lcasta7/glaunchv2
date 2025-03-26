@@ -2,6 +2,7 @@
   "name": "glaunchv2",
   "version": "1.0.0",
   "type": "module",
+  "sourceType": "module",
   "description": "A keyboard driven window management tool.",
   "private": true,
   "license": "LGPL-3.0-or-later",

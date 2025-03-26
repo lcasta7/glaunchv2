@@ -5,5 +5,8 @@
     <key name="f6" type="as">
 	  <default><![CDATA[['F6']]]></default>
     </key>
+    <key name="f7" type="as">
+	  <default><![CDATA[['F7']]]></default>
+    </key>
   </schema>
 </schemalist>
