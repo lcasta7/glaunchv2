@@ -7,25 +7,19 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js";
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 
 import Config from "./config.js";
+import Launcher from "./launcher.js";
 
 export default class GlaunchV2 extends Extension {
 	enable() {
 		//set[string]App
 		let appMap = new Map<string, Meta.Window>();
 		const config = new Config();
+		const launcher = new Launcher();
+
+
+
 		global.window_manager.connect("map", (_, win: Meta.WindowActor) => {
-			//we launch with this if it's available/otherwise wmAppName
-			// const gtkAppName = win.get_meta_window()?.get_gtk_application_id();
-
-			const metaWindow: Meta.Window = win.get_meta_window()!;
-			const wmAppName: string = metaWindow?.get_wm_class()?.toLowerCase() ?? "";
-			if (wmAppName === "" || wmAppName === "gjs") {
-				return;
-			}
-
-			if (metaWindow) {
-				appMap.set(wmAppName, metaWindow);
-			}
+			launcher.storeApp(win.get_meta_window()!)
 		});
 
 		global.window_manager.connect("destroy", (_, win: Meta.WindowActor) => {
