@@ -1,15 +1,23 @@
 import GLib from "gi://GLib";
 import Gio from "gi://Gio";
 
+interface ConfigEntry {
+	act: string;
+	key: string;
+	app?: string;
+}
+
 export default class Config {
 
 	boundedApps: Set<string | undefined>;
+	entries: ConfigEntry[];
 	constructor() {
 		const file = this._getConfigFile();
-		const configMap = this._createConfigMap(file);
+		this.entries = this._createConfigMap(file);
 
+		//names don't match here
 		this.boundedApps = new Set(
-			configMap.filter((bind) => bind.app).map((bind) => bind.app),
+			this.entries.filter((bind) => bind.app).map((bind) => bind.app),
 		);
 	}
 
@@ -26,7 +34,7 @@ export default class Config {
 
 	private _createConfigMap(
 		file: Gio.File,
-	): Array<{ com: string; key: string; app?: string }> {
+	): ConfigEntry[] {
 		const [success, contents]: [boolean, Uint8Array, ...unknown[]] =
 			file.load_contents(null);
 
@@ -34,7 +42,7 @@ export default class Config {
 			throw new Error("[GlaunchV2] Error Loading config file");
 		}
 
-		const config: Array<{ com: string; key: string; app?: string }> = [];
+		const config: ConfigEntry[] = [];
 		const configurationLines = new TextDecoder("utf-8").decode(contents);
 		configurationLines.split("\n").forEach((line, lineNumber) => {
 			if (line.trim() === "" || line.trim().startsWith("#")) {
@@ -44,12 +52,12 @@ export default class Config {
 			const parts = line.split(/\s+/);
 			if (parts.length === 2) {
 				config.push({
-					com: parts[0],
+					act: parts[0],
 					key: parts[1],
 				});
 			} else if (parts.length === 3) {
 				config.push({
-					com: parts[0],
+					act: parts[0],
 					key: parts[1],
 					app: parts[2],
 				});
@@ -78,7 +86,7 @@ export default class Config {
 				launch f11 gnome-terminal
 
 				# Window Management
-			        window_other f12`);
+			        win_prev f4`);
 
 			outputStream.write_bytes(bytes, null);
 			outputStream.close(null);
