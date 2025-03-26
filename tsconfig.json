@@ -6,14 +6,8 @@
     "sourceMap": false,
     "strict": true,
     "target": "ES2022",
-    "lib": [
-      "ES2022"
-    ],
+    "lib": ["ES2022"]
   },
-  "include": [
-    "ambient.d.ts",
-  ],
-  "files": [
-    "extension.ts"
-  ],
+  "include": ["ambient.d.ts"],
+  "files": ["extension.ts"]
 }
