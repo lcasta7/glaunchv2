@@ -1,15 +1,24 @@
 import GLib from "gi://GLib";
 import Gio from "gi://Gio";
 
+const DEFAULT_CONFIG = `# App Shortcuts
+launch f9 firefox
+launch f11 code
+launch f11 gnome-terminal
+
+# Window Management
+window_other f12`;
+
 export default class Config {
 
-	boundedApps: Set<string | undefined>;
+
+	public boundedApps: Set<string | undefined>;
 	constructor() {
 		const file = this._getConfigFile();
 		const configMap = this._createConfigMap(file);
 
 		this.boundedApps = new Set(
-			configMap.filter((bind) => bind.app).map((bind) => bind.app),
+			configMap.filter((bind) => bind.app !== undefined).map((bind) => bind.app),
 		);
 	}
 
@@ -71,14 +80,7 @@ export default class Config {
 			}
 			const outputStream = file.create(Gio.FileCreateFlags.NONE, null);
 
-			const bytes = new TextEncoder().encode(`
-				# App Shortcuts
-				launch f9 firefox
-				launch f11 code
-				launch f11 gnome-terminal
-
-				# Window Management
-			        window_other f12`);
+			const bytes = new TextEncoder().encode(DEFAULT_CONFIG);
 
 			outputStream.write_bytes(bytes, null);
 			outputStream.close(null);
