@@ -26,6 +26,10 @@ export class AppCollection {
 		app.focus();
 	}
 
+	size() {
+		return this._col.length;
+	}
+
 	deleteApp(win: Meta.Window) {
 		const index = this._col.findIndex(w => w.equals(win))
 		if (index === -1) {
