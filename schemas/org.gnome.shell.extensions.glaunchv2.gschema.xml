@@ -3,6 +3,10 @@
 <schemalist>
   <schema id="org.gnome.shell.extensions.glaunchv2" path="/org/gnome/shell/extensions/glaunchv2/">
 
+    <key name="f4" type="as">
+	  <default><![CDATA[['F4']]]></default>
+    </key>
+
     <key name="f9" type="as">
 	  <default><![CDATA[['F9']]]></default>
     </key>

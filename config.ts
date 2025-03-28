@@ -2,7 +2,7 @@ import GLib from "gi://GLib";
 import Gio from "gi://Gio";
 
 const DEFAULT_CONFIG = `# App Shortcuts
-launch f9 firefox
+launch f9 firefox-esr
 launch f10 code
 launch f11 gnome-terminal
 

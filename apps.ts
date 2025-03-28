@@ -36,10 +36,6 @@ export class AppCollection {
 			return;
 		}
 
-		if (this._head.equals(win) && this._col.length > 1) {
-			this.goNext();
-		}
-
 		this._col.splice(index, 1)
 	}
 
