@@ -90,6 +90,9 @@ export default class Launcher {
 
 	}
 
+	private _deleteWin() {
+		global.display.focus_window.delete(global.get_current_time());
+	}
 
 	private _bindKeys() {
 		this._config.entries.forEach((bind, _) => {
@@ -110,6 +113,14 @@ export default class Launcher {
 						Meta.KeyBindingFlags.NONE,
 						Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
 						() => this._handleApp(this._other))
+					break;
+				case "win_delete":
+					Main.wm.addKeybinding(
+						bind.key,
+						this._settings,
+						Meta.KeyBindingFlags.NONE,
+						Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
+						() => this._deleteWin())
 					break;
 				case "win_prev":
 					Main.wm.addKeybinding(
