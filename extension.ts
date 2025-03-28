@@ -12,9 +12,7 @@ export default class GlaunchV2 extends Extension {
 
 	enable() {
 		this._config = new Config();
-		this._settings = this.getSettings(
-			"org.gnome.shell.extensions.glaunchv2",
-		);
+		this._settings = this.getSettings();
 		const launcher = new Launcher(this._config, this._settings);
 		global.window_manager.connect("map", (_, win: Meta.WindowActor) => {
 			launcher.storeApp(win.get_meta_window()!)

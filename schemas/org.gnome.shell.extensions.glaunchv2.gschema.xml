@@ -2,11 +2,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.shell.extensions.glaunchv2" path="/org/gnome/shell/extensions/glaunchv2/">
-    <key name="f6" type="as">
-	  <default><![CDATA[['F6']]]></default>
+
+    <key name="f9" type="as">
+	  <default><![CDATA[['F9']]]></default>
     </key>
+    <key name="f10" type="as">
+	  <default><![CDATA[['F10']]]></default>
+    </key>
+    <key name="f11" type="as">
+	  <default><![CDATA[['F11']]]></default>
+    </key>
+
     <key name="f7" type="as">
 	  <default><![CDATA[['F7']]]></default>
     </key>
+    <key name="f6" type="as">
+	  <default><![CDATA[['F6']]]></default>
+    </key>
+
   </schema>
 </schemalist>
