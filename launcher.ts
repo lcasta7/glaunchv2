@@ -20,6 +20,7 @@ export default class Launcher {
 		this._config = config;
 		this._settings = settings;
 		this._bindKeys();
+		this._apps = this._startUpMapping()
 	}
 
 	storeApp(win: Meta.Window) {
@@ -123,6 +124,23 @@ export default class Launcher {
 
 		})
 
+	}
+
+	private _startUpMapping() {
+		let openedAppsMap = new Map();
+		let openedApps = global.display.get_tab_list(Meta.TabList.NORMAL, null)
+
+		openedApps.forEach(appInstance => {
+			const mapName = this._retrieveMapName(appInstance)
+
+			if (openedAppsMap.has(mapName)) {
+				openedAppsMap.get(mapName)?.storeApp(appInstance)
+			} else {
+				openedAppsMap.set(mapName, new AppCollection(new App(appInstance)))
+			}
+		})
+
+		return openedAppsMap
 	}
 
 	private _retrieveMapName(win: Meta.Window): string {
