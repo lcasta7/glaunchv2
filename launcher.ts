@@ -22,9 +22,10 @@ export default class Launcher {
 	}
 
 	storeApp(win: Meta.Window) {
-		const mapName = this._retrieveMapName(win)
+		if (win.get_wm_class_instance() === 'gjs') return;
+		if (win.get_window_type() !== Meta.WindowType.NORMAL) return;
 
-		//this keeps going to other
+		const mapName = this._retrieveMapName(win)
 		if (this._apps.has(mapName)) {
 			console.log(`[GlaunchV2] Storing new app in existing mapping ${mapName}`);
 			this._apps.get(mapName)?.storeApp(win);
@@ -41,7 +42,6 @@ export default class Launcher {
 		const appCol = this._apps.get(mapName);
 		if (appCol) {
 			appCol.deleteApp(win);
-
 			if (appCol.size() === 0) {
 				this._apps.delete(mapName);
 			}
@@ -81,6 +81,13 @@ export default class Launcher {
 		}
 	}
 
+	private _goToPrev() {
+		const mruWindows = global.display.get_tab_list(Meta.TabList.NORMAL, null);
+		if (mruWindows.length < 2) return;
+		new App(mruWindows[1]).focus();
+
+	}
+
 
 	private _bindKeys() {
 		this._config.entries.forEach((bind, _) => {
@@ -93,14 +100,14 @@ export default class Launcher {
 						Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
 						() => this._handleApp(bind.app!))
 					break;
-				// case "win_prev":
-				// 	Main.wm.addKeybinding(
-				// 		bind.key,
-				// 		this._settings,
-				// 		Meta.KeyBindingFlags.NONE,
-				// 		Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
-				// 		() => this._goToPrev())
-				// 	break;
+				case "win_prev":
+					Main.wm.addKeybinding(
+						bind.key,
+						this._settings,
+						Meta.KeyBindingFlags.NONE,
+						Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
+						() => this._goToPrev())
+					break;
 
 			}
 

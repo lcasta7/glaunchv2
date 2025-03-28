@@ -36,10 +36,6 @@ export class AppCollection {
 			return;
 		}
 
-		if (this._head.equals(win) && this._col.length > 1) {
-			this.goNext();
-		}
-
 		this._col.splice(index, 1)
 	}
 
@@ -56,8 +52,9 @@ export class App {
 	}
 
 	focus() {
-		this._win.activate(global.get_current_time())
-		this._centerMouse()
+		this._win.raise_and_make_recent_on_workspace(this._win.get_workspace())
+		this._centerMouse();
+		this._win.focus(global.get_current_time());
 	}
 
 	equals(win: Meta.Window): boolean {
