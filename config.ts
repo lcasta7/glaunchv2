@@ -2,32 +2,30 @@ import GLib from "gi://GLib";
 import Gio from "gi://Gio";
 
 const DEFAULT_CONFIG = `# App Shortcuts
+# Apps
 launch f9 firefox-esr
 launch f10 code
-launch f11 gnome-terminal
+launch f11 alacritty
 
 # Window Management
-window_prev f4`;
+win_prev f4
+win_other f12
+win_delete 3
+#win_center_mouse
+`;
 
 interface ConfigEntry {
 	act: string;
-	key: string;
+	key?: string;
 	app?: string;
 }
 
 
 export default class Config {
-
-
-	public boundedApps: Set<string | undefined>;
 	entries: ConfigEntry[];
 	constructor() {
 		const file = this._getConfigFile();
 		this.entries = this._createConfigMap(file);
-
-		this.boundedApps = new Set(
-			this.entries.filter((bind) => bind.app !== undefined).map((bind) => bind.app),
-		);
 	}
 
 	private _getConfigFile(): Gio.File {
@@ -35,7 +33,10 @@ export default class Config {
 		const file: Gio.File = Gio.File.new_for_path(`${configDir}/glaunch.conf`);
 
 		if (!file.query_exists(null)) {
-			this._createConfigFile(configDir, file);
+			const success = this._createConfigFile(configDir, file);
+			if (!success) {
+				throw new Error("[GlaunchV2] Error config file");
+			}
 		}
 
 		return file;
@@ -59,12 +60,17 @@ export default class Config {
 			}
 
 			const parts = line.trim().split(/\s+/);
-			if (parts.length === 2) {
+			if (parts.length === 1) {
+				config.push({
+					act: parts[0],
+				});
+			} else if (parts.length === 2) {
 				config.push({
 					act: parts[0],
 					key: parts[1],
 				});
-			} else if (parts.length === 3) {
+			}
+			else if (parts.length === 3) {
 				config.push({
 					act: parts[0],
 					key: parts[1],
@@ -80,20 +86,28 @@ export default class Config {
 		return config;
 	}
 
-	private _createConfigFile(configDir: string, file: Gio.File) {
+	private _createConfigFile(configDir: string, file: Gio.File): boolean {
+		let outputStream: Gio.OutputStream | null = null;
 		try {
 			const dir: Gio.File = Gio.File.new_for_path(configDir);
 			if (!dir.query_exists(null)) {
 				dir.make_directory_with_parents(null);
 			}
-			const outputStream = file.create(Gio.FileCreateFlags.NONE, null);
 
+			outputStream = file.create(Gio.FileCreateFlags.NONE, null);
 			const bytes = new TextEncoder().encode(DEFAULT_CONFIG);
-
 			outputStream.write_bytes(bytes, null);
-			outputStream.close(null);
+			return true
 		} catch (error) {
 			throw new Error(`[GlaunchV2] Error creating config file: ${error}`);
+		} finally {
+			if (outputStream) {
+				try {
+					outputStream.close(null);
+				} catch (closeError) {
+					console.error(`[GlaunchV2] Error closing output stream: ${closeError}`);
+				}
+			}
 		}
 	}
 }
