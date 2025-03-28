@@ -58,7 +58,7 @@ export default class Config {
 				return;
 			}
 
-			const parts = line.split(/\s+/);
+			const parts = line.trim().split(/\s+/);
 			if (parts.length === 2) {
 				config.push({
 					act: parts[0],
