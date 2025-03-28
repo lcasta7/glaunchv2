@@ -16,6 +16,9 @@
     <key name="f11" type="as">
 	  <default><![CDATA[['F11']]]></default>
     </key>
+    <key name="f12" type="as">
+	  <default><![CDATA[['F12']]]></default>
+    </key>
 
     <key name="f7" type="as">
 	  <default><![CDATA[['F7']]]></default>
