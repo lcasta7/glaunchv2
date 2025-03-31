@@ -76,7 +76,6 @@ export default class Launcher {
 		}
 	}
 
-
 	private _handleApp(appName: string) {
 		const focusedName = this._retrieveMapName(global.display.focus_window);
 		const appDesktopName = this._retrieveDesktopName(appName)
