@@ -4,13 +4,13 @@ import Gio from "gi://Gio";
 const DEFAULT_CONFIG = `# App Shortcuts
 # Apps
 launch f9 firefox-esr
-launch f10 code
-launch f11 alacritty
+launch f10 emacs
+launch f11 kitty
 
 # Window Management
 win_prev f4
 win_other f12
-win_delete 3
+win_delete f3
 #win_center_mouse
 `;
 
